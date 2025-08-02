@@ -255,6 +255,13 @@
     guides:
     - Cyborgs
     - Robotics
+  - type: LanguageKnowledge # Einstein Engines - Languages
+    speaks:
+    - TauCetiBasic
+    - RobotTalk
+    understands:
+    - TauCetiBasic
+    - RobotTalk
   - type: ProtectedFromStepTriggers
   - type: DamageOnInteractProtection
     damageProtection:
@@ -270,6 +277,13 @@
   - type: EyeProtection
   - type: Stripping
   - type: Vore
+
+- type: entity
+  abstract: true
+  parent: BaseBorgChassisNotIonStormable
+  id: BaseBorgChassis
+  components:
+  - type: IonStormTarget
 
 - type: entity
   abstract: true

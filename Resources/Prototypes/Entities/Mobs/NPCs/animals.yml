@@ -52,8 +52,11 @@
     flavorKind: station-event-random-sentience-flavor-organic
   - type: Bloodstream
     bloodMaxVolume: 50
-  - type: ReplacementAccent
-    accent: mouse
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Mouse
+    understands:
+    - Mouse
   - type: MeleeWeapon
     soundHit:
       path: /Audio/Effects/bite.ogg
@@ -62,6 +65,20 @@
     damage:
       types:
         Piercing: 5
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      30: Critical
+      60: Dead
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 120
+      behaviors:
+      - !type:GibBehavior
+        recursive: false
   - type: Tag
     tags:
     - VimPilot
@@ -253,8 +270,11 @@
     eggSpawn:
     - id: FoodEggLaid # Frontier: FoodEgg<FoodEggLaid
   - type: ExaminableHunger
-  - type: ReplacementAccent
-    accent: chicken
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Chicken
+    understands:
+    - Chicken
   - type: SentienceTarget
     flavorKind: station-event-random-sentience-flavor-organic
   - type: NpcFactionMember
@@ -420,9 +440,12 @@
         damageType: Blunt
         damage: 10
       behaviors:
-      - !type:GibBehavior # Shitmed Change
+      - !type:GibBehavior
         gibContents: Skip # Shitmed Change
   - type: NonSpreaderZombie
+  - type: LanguageKnowledge # Einstein Engines - Languages
+    speaks: [Hissing]
+    understands: [Hissing]
   - type: SentienceTarget
     flavorKind: station-event-random-sentience-flavor-organic
   - type: MeleeWeapon
@@ -573,8 +596,11 @@
       prob: 0.3 # Frontier
   - type: Extractable
     grindableSolutionName: food
-  - type: ReplacementAccent
-    accent: mothroach
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Moffic
+    understands:
+    - Moffic
   - type: ZombieAccentOverride
     accent: zombieMoth
   - type: Vocal
@@ -652,7 +678,6 @@
             state: neck
   - type: LeashAnchor # Floofstation - mothroach my beloved <3
 
-
 # Note that the mallard duck is actually a male drake mallard, with the brown duck being the female variant of the same species, however ss14 lacks sex specific textures
 # The white duck is more akin to a pekin or call duck.
 
@@ -723,8 +748,11 @@
     eggSpawn:
     - id: FoodEggLaid # Frontier: FoodEgg<FoodEggLaid
   - type: ExaminableHunger
-  - type: ReplacementAccent
-    accent: duck
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Duck
+    understands:
+    - Duck
   - type: SentienceTarget
     flavorKind: station-event-random-sentience-flavor-organic
   - type: NpcFactionMember
@@ -859,6 +887,15 @@
     bloodMaxVolume: 0.1
   - type: MobPrice
     price: 50
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 20
+      behaviors:
+      - !type:GibBehavior
+        recursive: false
 
 - type: entity
   name: cow
@@ -1007,8 +1044,11 @@
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
       path: /Audio/Voice/Arachnid/arachnid_chitter.ogg
-  - type: ReplacementAccent
-    accent: crab
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Crab
+    understands:
+    - Crab
   - type: Bloodstream
     bloodMaxVolume: 50
     bloodReagent: CopperBlood
@@ -1290,8 +1330,11 @@
   - type: Inventory
     speciesId: kangaroo
     templateId: kangaroo
-  - type: ReplacementAccent
-    accent: kangaroo
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Kangaroo
+    understands:
+    - Kangaroo
   - type: Butcherable
     spawned:
     - id: FoodMeat
@@ -1317,9 +1360,6 @@
   - type: Vocal
     sounds:
       Unsexed: Kangaroo
-  - type: FootstepModifier
-    footstepSoundCollection:
-      collection: FootstepBounce
   - type: Puller
     needsHands: false
   - type: StaminaDamageOnHit
@@ -1507,7 +1547,12 @@
   - type: Speech
     speechSounds: Monkey
     speechVerb: Monkey
-  - type: MonkeyAccent
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Monkey
+    understands:
+    - Monkey
+    - Kobold
   - type: SentienceTarget
     flavorKind: station-event-random-sentience-flavor-primate
   - type: AlwaysRevolutionaryConvertible
@@ -1543,7 +1588,13 @@
   - type: Speech
     speechSounds: Monkey
     speechVerb: Monkey
-  - type: MonkeyAccent
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Monkey
+    understands:
+    - Monkey
+    - Kobold
+    - TauCetiBasic # Understanding your nukeops partners.
   - type: NpcFactionMember
     factions:
     - Syndicate
@@ -1588,6 +1639,19 @@
   - type: NameIdentifier
     group: Kobold
   - type: LizardAccent
+    species: Kobold
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Kobold
+    understands:
+    - Kobold
+    - Monkey
+  - type: ReplacementAccent
+    accent: kobold
+  - type: Body
+    prototype: Kobold
+    requiredLegs: 2
+  # Shitmed Change End
   - type: ReplacementAccent
     accent: kobold
   - type: Speech
@@ -1877,8 +1941,11 @@
     spawned:
     - id: FoodMeatRat
       amount: 1
-  - type: ReplacementAccent
-    accent: mouse
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Mouse
+    understands:
+    - Mouse
   - type: Tag
     tags:
     - Trash
@@ -2252,6 +2319,15 @@
   - type: Tag
     tags:
     - VimPilot
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 60
+      behaviors:
+      - !type:GibBehavior
+        recursive: false
 
 # Would be cool to have some functionality for the parrot to be able to sit on stuff
 - type: entity
@@ -2302,6 +2378,11 @@
     sounds:
       Unsexed: Parrot
   - type: ParrotAccent
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - TauCetiBasic
+    understands:
+    - TauCetiBasic
   - type: InteractionPopup
     successChance: 0.6
     interactSuccessString: petting-success-bird
@@ -2382,6 +2463,13 @@
     heatDamageThreshold: 335
     coldDamageThreshold: 230
     currentTemperature: 310.15
+  - type: Genetics # Funkystation - Genetics
+    baseMutations:
+    - id: OvipositionGlands
+      chance: 0.5
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks: [Penguin]
+    understands: [Penguin]
     specificHeat: 46
     coldDamage:
       types:
@@ -2389,10 +2477,6 @@
     heatDamage:
       types:
         Heat : 0.2 #per second, scales with temperature & other constants
-  - type: Genetics # Funkystation - Genetics
-    baseMutations:
-    - id: OvipositionGlands
-      chance: 0.5
 
 - type: entity
   name: grenade penguin
@@ -2444,6 +2528,7 @@
         Brute: 5
   - type: Item
     size: Normal
+    sprite: Mobs/Animals/grenadepenguin.rsi
   - type: OnUseTimerTrigger
     delay: 10
     beepSound:
@@ -2506,6 +2591,15 @@
   - type: InteractionPopup
     successChance: 0.6
     interactSuccessString: petting-success-reptile
+  - type: Genetics # Funkystation - Genetics
+    baseMutations:
+    - id: LateralUndulation
+      chance: 0.5
+    - id: ThermalVision
+      chance: 0.08
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks: [Hissing]
+    understands: [Hissing]
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
   - type: Bloodstream
@@ -2513,12 +2607,6 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: Scale
-  - type: Genetics # Funkystation - Genetics
-    baseMutations:
-    - id: LateralUndulation
-      chance: 0.5
-    - id: ThermalVision
-      chance: 0.08
 
 # Code unique spider prototypes or combine them all into one spider and get a
 # random sprite state when you spawn it.
@@ -2569,8 +2657,11 @@
   - type: MeleeChemicalInjector
     transferAmount: 0.75
     solution: melee
-  - type: ReplacementAccent
-    accent: xeno
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Xeno
+    understands:
+    - Xeno
   - type: InteractionPopup
     successChance: 0.5
     interactSuccessString: petting-success-tarantula
@@ -2746,10 +2837,11 @@
   description: This spider looks a little magical
   suffix: Wizard
   components:
-  - type: Accentless
-    removes:
-    - type: ReplacementAccent
-      accent: xeno  #let this wizard speak
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Universal # Should allow them to understand everything and speak it too. Might need to change this.
+    understands:
+    - Universal
 
 - type: entity
   name: possum
@@ -2796,6 +2888,13 @@
     interactSuccessString: petting-success-possum # Possums don't really make much noise when they're happy. They make clicking noises as a mating call, but that is NOT the same thing!
     interactFailureString: petting-failure-possum
     interactFailureSound:
+  - type: LeashAnchor # Floofstation
+    kind: Intrinsic
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Hissing
+    understands:
+    - Hissing
       path: /Audio/Animals/cat_hiss.ogg # This sound effect is intended for generic hissing. For easy reference it's named after the animal it came from IRL.
   - type: Grammar
     attributes:
@@ -2803,8 +2902,6 @@
   - type: Tag
     tags:
     - VimPilot
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
 
 - type: entity
   name: possum
@@ -2873,6 +2970,13 @@
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
+  - type: LeashAnchor # Floofstation
+    kind: Intrinsic
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Hissing
+    understands:
+    - Hissing
       path: /Audio/Animals/raccoon_chatter.ogg
   - type: Grammar
     attributes:
@@ -2880,8 +2984,6 @@
   - type: Tag
     tags:
     - VimPilot
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
 
 - type: entity
   name: fox
@@ -2954,6 +3056,13 @@
     factions:
     - Passive
   - type: NPCRetaliation
+  - type: LeashAnchor # Floofstation
+    kind: Intrinsic
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Fox
+    understands:
+    - Fox
     attackMemoryLength: 10
   - type: HTN
     rootTask:
@@ -2961,8 +3070,6 @@
   - type: Tag
     tags:
     - VimPilot
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
 
 - type: entity
   name: corgi
@@ -3007,8 +3114,11 @@
     spawned:
     - id: FoodMeat
       amount: 2
-  - type: ReplacementAccent
-    accent: dog
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Dog
+    understands:
+    - Dog
   - type: InteractionPopup
     interactSuccessString: petting-success-dog
     interactFailureString: petting-failure-generic
@@ -3160,8 +3270,11 @@
     spawned:
     - id: FoodMeat
       amount: 3
-  - type: ReplacementAccent
-    accent: cat
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Cat
+    understands:
+    - Cat
   - type: InteractionPopup
     successChance: 0.7
     interactSuccessString: petting-success-cat
@@ -3179,13 +3292,6 @@
       types:
         Piercing: 5
   - type: Grammar
-    attributes:
-      gender: epicene
-  - type: MobPrice
-    price: 200
-  - type: Tag
-    tags:
-    - VimPilot
   - type: MovementSpeedModifier
     baseWalkSpeed: 2
     baseSprintSpeed: 4
@@ -3199,6 +3305,13 @@
   - type: LeashAnchor # Floofstation
     kind: Intrinsic
   # End DeltaV
+      gender: epicene
+  - type: MobPrice
+    price: 200
+  - type: Tag
+    tags:
+    - VimPilot
+  - type: VentCrawler # goobstation - Ventcrawl
 
 - type: entity
   name: calico cat
@@ -3267,6 +3380,12 @@
         Slash: 6
         Piercing: 6
         Structural: 15
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Cat
+    understands:
+    - Cat
+    - TauCetiBasic # Needs to understand your nukie ops.
 
 - type: entity
   name: space cat
@@ -3410,6 +3529,15 @@
     interactFailureString: petting-failure-sloth
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
+  - type: Genetics # Funkystation - Genetics
+    baseMutations:
+    - id: Narcolepsy
+      chance: 0.5
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Hissing
+    understands:
+    - Hissing
       path: /Audio/Animals/sloth_squeak.ogg
   - type: Grammar
     attributes:
@@ -3417,10 +3545,6 @@
   - type: Tag
     tags:
     - VimPilot
-  - type: Genetics # Funkystation - Genetics
-    baseMutations:
-    - id: Narcolepsy
-      chance: 0.5
 
 - type: entity
   name: ferret
@@ -3469,6 +3593,17 @@
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
+  - type: LeashAnchor # Floofstation
+    kind: Intrinsic
+  - type: Genetics # Funkystation - Genetics
+    baseMutations:
+    - id: LateralUndulation
+      chance: 0.5
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Hissing
+    understands:
+    - Hissing
       path: /Audio/Animals/ferret_happy.ogg
   - type: Grammar
     attributes:
@@ -3476,12 +3611,6 @@
   - type: Tag
     tags:
     - VimPilot
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
-  - type: Genetics # Funkystation - Genetics
-    baseMutations:
-    - id: LateralUndulation
-      chance: 0.5
 
 - type: entity
   name: hamster
@@ -3579,8 +3708,11 @@
     spawned:
     - id: FoodMeat
       amount: 1
-  - type: ReplacementAccent
-    accent: mouse
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Mouse
+    understands:
+    - Mouse
   - type: Tag
     tags:
     - VimPilot
@@ -3618,19 +3750,19 @@
   - type: Bloodstream
     bloodMaxVolume: 60
   - type: CanEscapeInventory
-    baseResistTime: 3
-  - type: MobPrice
-    price: 60
-  - type: NonSpreaderZombie
-  - type: FireVisuals
-    sprite: Mobs/Effects/onfire.rsi
-    normalState: Mouse_burning
   - type: LeashAnchor # Floofstation
     kind: Intrinsic
   - type: Genetics # Funkystation - Genetics
     baseMutations:
     - id: StoragePouch
       chance: 0.5
+      sprite: Mobs/Animals/hamster.rsi
+      state: dead-0
+    entries:
+      burger:
+        name: food-sequence-burger-content-hamster
+      taco:
+        name: food-sequence-content-hamster
 
 - type: entity
   name: pig
@@ -3693,8 +3825,11 @@
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
       path: /Audio/Animals/pig_oink.ogg
-  - type: ReplacementAccent
-    accent: pig
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Pig
+    understands:
+    - Pig
   - type: SentienceTarget
     flavorKind: station-event-random-sentience-flavor-organic
   - type: NpcFactionMember
@@ -3786,6 +3921,12 @@
     reformTime: 10
     popupText: diona-reform-attempt
     reformPrototype: MobDionaReformed
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - RootSpeak
+    understands:
+    - RootSpeak
+    - TauCetiBasic
 
 - type: entity
   parent: MobDionaNymph
@@ -3856,6 +3997,11 @@
       task: SimpleHostileCompound
   - type: Puller
     needsHands: false
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Deer
+    understands:
+    - Deer
 
 - type: entity
   name: reindeer doe

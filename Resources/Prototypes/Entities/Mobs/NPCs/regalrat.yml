@@ -7,7 +7,7 @@
   - type: ThermalVision # Starlight
   - type: CombatMode
   - type: MovementSpeedModifier
-    baseWalkSpeed : 3.00
+    baseWalkSpeed : 4.00
     baseSprintSpeed : 5.00
   - type: InputMover
   - type: MobMover
@@ -30,6 +30,8 @@
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: eyes
       shader: unshaded
+  - type: TypingIndicator
+    proto: regal
   - type: Physics
     bodyType: KinematicController
   - type: Fixtures
@@ -68,9 +70,9 @@
         type: SurgeryBui
   - type: Hunger # probably should be prototyped
     thresholds:
-      Overfed: 200
-      Okay: 150
-      Peckish: 100
+      Overfed: 400
+      Okay: 250
+      Peckish: 125
       Starving: 50
       Dead: 0
     baseDecayRate: 0.01666666666
@@ -114,6 +116,13 @@
   - type: MobsterAccent
   - type: Speech
     speechVerb: SmallMob
+  - type: LanguageKnowledge # Einstein Engines - Languages
+    speaks:
+    - TauCetiBasic
+    - Mouse
+    understands:
+    - TauCetiBasic
+    - Mouse
   - type: Butcherable
     spawned:
     - id: ClothingHeadHatFancyCrown #how did that get there?
@@ -184,8 +193,8 @@
     freeHandsRequired: 1
   - type: CombatMode
   - type: MovementSpeedModifier
-    baseWalkSpeed : 3.5
-    baseSprintSpeed : 3.5
+    baseWalkSpeed : 4.0
+    baseSprintSpeed : 4.0
   - type: InputMover
   - type: MobMover
   - type: HTN
@@ -214,7 +223,12 @@
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded"]
       state: eyes
       shader: unshaded
-
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Mouse
+    understands:
+    - Mouse
+    - TauCetiBasic
   - type: SpriteMovement
     movementLayers:
       movement:
@@ -241,6 +255,15 @@
       0: Alive
       15: Critical
       30: Dead
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 60
+      behaviors:
+      - !type:GibBehavior
+        recursive: false
   - type: Stamina
     critThreshold: 60
   - type: MeleeWeapon
@@ -327,7 +350,7 @@
   description: Spend some hunger to summon an allied rat to help defend you.
   components:
   - type: InstantAction
-    useDelay: 4
+    useDelay: 3
     icon:
       sprite: Interface/Actions/actions_rat_king.rsi
       state: ratKingArmy

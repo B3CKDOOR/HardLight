@@ -42,6 +42,13 @@
       - MedicalDoctor
     - type: PirateBountyItem # Frontier
       id: Defibrillator # Frontier
+      - Medical Doctor
+    - type: LanguageSpeaker # Einstein Engines - Language
+    - type: LanguageKnowledge # Einstein Engines - Language
+      speaks:
+      - TauCetiBasic
+      understands:
+      - TauCetiBasic
 
 - type: entity
   id: Defibrillator
@@ -65,7 +72,7 @@
 - type: entity
   id: DefibrillatorOneHandedUnpowered
   parent: BaseDefibrillator
-  suffix: One-Handed, Unpowered
+  suffix: One-Handed, Always Powered
 
 - type: entity
   id: DefibrillatorCompact # This should be a research item at some point

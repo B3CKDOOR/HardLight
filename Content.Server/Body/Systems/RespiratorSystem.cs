@@ -12,6 +12,7 @@ using Content.Shared.Alert;
 using Content.Shared.Atmos;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Prototypes;
+using Content.Shared.Chat; // Einstein Engines - Language
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Chat;
@@ -191,6 +192,20 @@ public sealed class RespiratorSystem : EntitySystem
         }
 
         _atmosSys.Merge(ev.Gas, outGas);
+    }
+
+    /// <summary>
+    /// Returns true if the entity is above their SuffocationThreshold and alive.
+    /// </summary>
+    public bool IsBreathing(Entity<RespiratorComponent?> ent)
+    {
+        if (_mobState.IsIncapacitated(ent))
+            return false;
+
+        if (!Resolve(ent, ref ent.Comp))
+            return false;
+
+        return (ent.Comp.Saturation > ent.Comp.SuffocationThreshold);
     }
 
     /// <summary>

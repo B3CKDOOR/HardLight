@@ -69,7 +69,30 @@
     radius: 6
     castShadows: false
     enabled: false
-  # Frontier: changes to the prototype so it can access radars
+  - type: Speech #Goobstation - Dead chat verbs
+    speechVerb: Dead
+  - type: GhostColor
+  - type: CollectiveMind
+    hearAll: true
+    seeAllNames: true
+  - type: LanguageSpeaker # Einstein Engines - Languages
+  - type: UniversalLanguageSpeaker # Einstein Engines - Languages
+  - type: UserInterface
+    interfaces:
+      enum.RevivalContractUiKey.Key: # Goobstation - Devil
+        type: RevivalContractBoundUserInterface
+        requireInputValidation: false
+
+# proto for player ghosts specifically
+- type: entity
+  parent: MobObserverBase
+  id: MobObserver
+  components:
+  - type: Spectral
+  - type: Tag
+    tags:
+    - AllowGhostShownByEvent
+  # <Goobstation>
   - type: UserInterface
     interfaces:
       enum.RadarConsoleUiKey.Key:

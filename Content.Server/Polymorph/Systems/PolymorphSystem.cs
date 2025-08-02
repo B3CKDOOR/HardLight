@@ -6,6 +6,7 @@ using Content.Server.Mind.Commands;
 using Content.Server.Polymorph.Components;
 using Content.Shared.Actions;
 using Content.Shared.Buckle;
+using Content.Shared.Buckle.Components;
 using Content.Shared.Coordinates;
 using Content.Shared.Damage;
 using Content.Shared.Destructible;
@@ -225,7 +226,22 @@ public sealed partial class PolymorphSystem : EntitySystem
 
         MakeSentientCommand.MakeSentient(child, EntityManager);
 
-        var polymorphedComp = _compFact.GetComponent<PolymorphedEntityComponent>();
+
+
+        // Einstein Engines - Language begin
+        // Copy specified components over
+        foreach (var compName in configuration.CopiedComponents)
+        {
+            if (!_compFact.TryGetRegistration(compName, out var reg)
+                || !EntityManager.TryGetComponent(uid, reg.Idx, out var comp))
+                continue;
+
+            var copy = _serialization.CreateCopy(comp, notNullableOverride: true);
+            copy.Owner = child;
+            AddComp(child, copy, true);
+        }
+        // Einstein Engines - Language end
+
         polymorphedComp.Parent = uid;
         polymorphedComp.Configuration = configuration;
 		// //#region Starlight
@@ -299,6 +315,10 @@ public sealed partial class PolymorphSystem : EntitySystem
         // Raise an event to inform anything that wants to know about the entity swap
         var ev = new PolymorphedEvent(uid, child, false);
         RaiseLocalEvent(uid, ref ev);
+
+        // visual effect spawn
+        if (configuration.EffectProto != null)
+            SpawnAttachedTo(configuration.EffectProto, child.ToCoordinates());
 
         // visual effect spawn
         if (configuration.EffectProto != null)

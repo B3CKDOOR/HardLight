@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Server.Chat.Systems;
 using Content.Server.Interaction;
+using Content.Server._EinsteinEngines.Language;
 using Content.Server.Popups;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
@@ -38,6 +39,7 @@ public sealed class RadioDeviceSystem : EntitySystem
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly AccessReaderSystem _access = default!; // Frontier: access
     [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!; // Frontier
+    [Dependency] private readonly LanguageSystem _language = default!;
 
     // Used to prevent a shitter from using a bunch of radios to spam chat.
     private HashSet<(string, EntityUid, RadioChannelPrototype)> _recentlySent = new();
@@ -242,7 +244,8 @@ public sealed class RadioDeviceSystem : EntitySystem
             ("originalName", nameEv.VoiceName));
 
         // log to chat so people can identity the speaker/source, but avoid clogging ghost chat if there are many radios
-        _chat.TrySendInGameICMessage(uid, args.Message, component.OutputChatType, ChatTransmitRange.GhostRangeLimitNoAdminCheck, nameOverride: name, checkRadioPrefix: false); // Frontier: GhostRangeLimit<GhostRangeLimitNoAdminCheck, InGameICChatType.Whisper<component.OutputChatType
+        var message = args.OriginalChatMsg.Message; // The chat system will handle the rest and re-obfuscate if needed.
+        _chat.TrySendInGameICMessage(uid, args.Message, component.OutputChatType, ChatTransmitRange.GhostRangeLimitNoAdminCheck, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language); // Frontier: GhostRangeLimit<GhostRangeLimitNoAdminCheck, InGameICChatType.Whisper<component.OutputChatType
     }
 
     private void OnIntercomEncryptionChannelsChanged(Entity<IntercomComponent> ent, ref EncryptionChannelsChangedEvent args)

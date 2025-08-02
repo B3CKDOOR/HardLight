@@ -33,6 +33,7 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction OpenCharacterMenu = "OpenCharacterMenu";
         public static readonly BoundKeyFunction OpenEmotesMenu = "OpenEmotesMenu";
         public static readonly BoundKeyFunction OpenCraftingMenu = "OpenCraftingMenu";
+        public static readonly BoundKeyFunction OpenLanguageMenu = "OpenLanguageMenu"; // Einstein Engines - Language
         public static readonly BoundKeyFunction OpenGuidebook = "OpenGuidebook";
         public static readonly BoundKeyFunction OpenInventoryMenu = "OpenInventoryMenu";
         public static readonly BoundKeyFunction SmartEquipBackpack = "SmartEquipBackpack";
@@ -44,6 +45,7 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction OpenAHelp = "OpenAHelp";
         public static readonly BoundKeyFunction SwapHands = "SwapHands";
         public static readonly BoundKeyFunction SwapHandsPrevious = "SwapHandsPrevious"; // Frontier
+        public static readonly BoundKeyFunction SwapHandsReverse = "SwapHandsReverse";
         public static readonly BoundKeyFunction MoveStoredItem = "MoveStoredItem";
         public static readonly BoundKeyFunction RotateStoredItem = "RotateStoredItem";
         public static readonly BoundKeyFunction SaveItemLocation = "SaveItemLocation";

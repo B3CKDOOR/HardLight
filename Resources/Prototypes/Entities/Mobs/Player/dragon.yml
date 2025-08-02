@@ -143,11 +143,12 @@
     foodPreference: All
     shouldStoreDevoured: true
     chemical: Ichor
-    healRate: 15.0
+    healRate: 7.5
     whitelist:
       components:
       - MobState
       - Door
+      - Item # Goobstation
       tags:
       - Wall
   - type: Tag
@@ -376,3 +377,31 @@
     checkCanAccess: false
     range: 0
     itemIconStyle: BigAction
+
+# Goobstation start: dragon rework
+- type: entity
+  id: ActionRiseFish
+  name: Summon Carp Horde
+  description: Summons 3 carps on the spot to protect you from danger!
+  components:
+  - type: InstantAction
+    icon:
+      sprite: _Goobstation/Actions/dragon.rsi
+      state: carp_horde
+    event: !type:DragonSpawnCarpHordeActionEvent
+    useDelay: 90
+    priority: 4
+
+- type: entity
+  id: ActionDragonRoar
+  name: Wing flap
+  description: Flap your wings to stun all enemies around you!
+  components:
+  - type: InstantAction
+    icon:
+      sprite: _Goobstation/Actions/dragon.rsi
+      state: wing_flap
+    event: !type:DragonRoarActionEvent
+    useDelay: 45
+    priority: 5
+# Goobstation end
