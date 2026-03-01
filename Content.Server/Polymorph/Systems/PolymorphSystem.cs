@@ -25,6 +25,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Robust.Shared.Serialization.Manager;
 
 namespace Content.Server.Polymorph.Systems;
 
@@ -34,6 +35,7 @@ public sealed partial class PolymorphSystem : EntitySystem
     [Dependency] private readonly SharedMapSystem _map = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
+    [Dependency] private readonly ISerializationManager _serialization = default!;
     [Dependency] private readonly ActionsSystem _actions = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly SharedBuckleSystem _buckle = default!;
@@ -242,6 +244,7 @@ public sealed partial class PolymorphSystem : EntitySystem
         }
         // Einstein Engines - Language end
 
+        var polymorphedComp = _compFact.GetComponent<PolymorphedEntityComponent>();
         polymorphedComp.Parent = uid;
         polymorphedComp.Configuration = configuration;
 		// //#region Starlight

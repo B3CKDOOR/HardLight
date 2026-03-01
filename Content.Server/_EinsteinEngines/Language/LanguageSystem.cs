@@ -55,7 +55,6 @@ public sealed partial class LanguageSystem : SharedLanguageSystem
             ev.SpokenLanguages.Add(PsychomanticPrototype);
     }
 
-
     private void OnClientSetLanguage(LanguagesSetMessage message, EntitySessionEventArgs args)
     {
         if (args.SenderSession.AttachedEntity is not { Valid: true } uid)
@@ -74,10 +73,13 @@ public sealed partial class LanguageSystem : SharedLanguageSystem
 
     public bool CanUnderstand(Entity<LanguageSpeakerComponent?> ent, ProtoId<LanguagePrototype> language)
     {
-        if (language == PsychomanticPrototype || language == UniversalPrototype || TryComp<UniversalLanguageSpeakerComponent>(ent, out var uni) && uni.Enabled)
+        if (language == PsychomanticPrototype ||
+            language == UniversalPrototype ||
+            TryComp<UniversalLanguageSpeakerComponent>(ent, out var uni) && uni.Enabled)
             return true;
 
-        return Resolve(ent, ref ent.Comp, logMissing: false) && ent.Comp.UnderstoodLanguages.Contains(language);
+        return Resolve(ent, ref ent.Comp, logMissing: false) &&
+               ent.Comp.UnderstoodLanguages.Contains(language);
     }
 
     public bool CanSpeak(Entity<LanguageSpeakerComponent?> ent, ProtoId<LanguagePrototype> language)
@@ -93,10 +95,9 @@ public sealed partial class LanguageSystem : SharedLanguageSystem
     /// </summary>
     public LanguagePrototype GetLanguage(Entity<LanguageSpeakerComponent?> ent)
     {
-        if (!Resolve(ent, ref ent.Comp, logMissing: false)
-            || string.IsNullOrEmpty(ent.Comp.CurrentLanguage)
-            || !_prototype.TryIndex<LanguagePrototype>(ent.Comp.CurrentLanguage, out var proto)
-        )
+        if (!Resolve(ent, ref ent.Comp, logMissing: false) ||
+            string.IsNullOrEmpty(ent.Comp.CurrentLanguage) ||
+            !_prototype.TryIndex<LanguagePrototype>(ent.Comp.CurrentLanguage, out var proto))
             return Universal;
 
         return proto;
@@ -108,23 +109,29 @@ public sealed partial class LanguageSystem : SharedLanguageSystem
     /// <remarks>This simply returns the value of <see cref="LanguageSpeakerComponent.SpokenLanguages"/>.</remarks>
     public List<ProtoId<LanguagePrototype>> GetSpokenLanguages(EntityUid uid)
     {
-        return TryComp<LanguageSpeakerComponent>(uid, out var component) ? component.SpokenLanguages : [];
+        // Fixed: replaced illegal [] literal with a proper empty list.
+        return TryComp<LanguageSpeakerComponent>(uid, out var component)
+            ? component.SpokenLanguages
+            : new List<ProtoId<LanguagePrototype>>();
     }
 
     /// <summary>
     ///     Returns the list of languages this entity can understand.
-    /// </summary
-    /// <remarks>This simply returns the value of <see cref="LanguageSpeakerComponent.SpokenLanguages"/>.</remarks>
+    /// </summary>
+    /// <remarks>This simply returns the value of <see cref="LanguageSpeakerComponent.UnderstoodLanguages"/>.</remarks>
     public List<ProtoId<LanguagePrototype>> GetUnderstoodLanguages(EntityUid uid)
     {
-        return TryComp<LanguageSpeakerComponent>(uid, out var component) ? component.UnderstoodLanguages : [];
+        // Fixed: replaced illegal [] literal with a proper empty list.
+        return TryComp<LanguageSpeakerComponent>(uid, out var component)
+            ? component.UnderstoodLanguages
+            : new List<ProtoId<LanguagePrototype>>();
     }
 
     public void SetLanguage(Entity<LanguageSpeakerComponent?> ent, ProtoId<LanguagePrototype> language)
     {
-        if (!CanSpeak(ent, language)
-            || !Resolve(ent, ref ent.Comp)
-            || ent.Comp.CurrentLanguage == language)
+        if (!CanSpeak(ent, language) ||
+            !Resolve(ent, ref ent.Comp) ||
+            ent.Comp.CurrentLanguage == language)
             return;
 
         ent.Comp.CurrentLanguage = language;

@@ -152,27 +152,19 @@ public sealed class RadioSystem : EntitySystem
             ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
             ("channel", channelText),
             ("name", name),
-            ("message", content));
+            ("message", content),
+            ("language", language)); // Einstein Engines - Language
 
-        var wrappedMessage = WrapRadioMessage(messageSource, channel, name, content, language); // Einstein Engines - Language
-
-        // most radios are relayed to chat, so lets parse the chat message beforehand
-        // var chat = new ChatMessage(
-        //     ChatChannel.Radio,
-        //     message,
-        //     wrappedMessage,
-        //     NetEntity.Invalid,
-        //     null);
-        // var chatMsg = new MsgChatMessage { Message = chat };
-        // var ev = new RadioReceiveEvent(message, messageSource, channel, radioSource, chatMsg);
-        var msg = new ChatMessage(ChatChannel.Radio, content, wrappedMessage, NetEntity.Invalid, null); // Einstein Engines - Language
-
+        //var wrappedMessage = WrapRadioMessage(messageSource, channel, name, content, language); // DEPRICATED, see below language block
         // Einstein Engines - Language begin
+        var msg = new ChatMessage(ChatChannel.Radio, content, wrappedMessage, NetEntity.Invalid, null);
+        
         var obfuscated = _language.ObfuscateSpeech(content, language);
         var obfuscatedWrapped = WrapRadioMessage(messageSource, channel, name, obfuscated, language);
         var notUdsMsg = new ChatMessage(ChatChannel.Radio, obfuscated, obfuscatedWrapped, NetEntity.Invalid, null);
         var ev = new RadioReceiveEvent(messageSource, channel, msg, notUdsMsg, language, radioSource);
         // Einstein Engines - Language end
+
 
         var sendAttemptEv = new RadioSendAttemptEvent(channel, radioSource);
         RaiseLocalEvent(ref sendAttemptEv);

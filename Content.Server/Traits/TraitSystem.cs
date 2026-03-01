@@ -1,4 +1,4 @@
-﻿using Content.Server.Administration.Logs;
+using Content.Server.Administration.Logs;
 using Content.Server.Administration.Systems;
 using Content.Server.Chat.Managers;
 using Content.Server.GameTicking;
@@ -125,19 +125,19 @@ public sealed class TraitSystem : EntitySystem
 
             if (traitPrototype.RemoveLanguagesSpoken is not null)
                 foreach (var lang in traitPrototype.RemoveLanguagesSpoken)
-                    language.RemoveLanguage(args.Mob, lang, true, false);
+                    language.RemoveLanguage(uid, lang, true, false);
 
             if (traitPrototype.RemoveLanguagesUnderstood is not null)
                 foreach (var lang in traitPrototype.RemoveLanguagesUnderstood)
-                    language.RemoveLanguage(args.Mob, lang, false, true);
+                    language.RemoveLanguage(uid, lang, false, true);
 
             if (traitPrototype.LanguagesSpoken is not null)
                 foreach (var lang in traitPrototype.LanguagesSpoken)
-                    language.AddLanguage(args.Mob, lang, true, false);
+                    language.AddLanguage(uid, lang, true, false);
 
             if (traitPrototype.LanguagesUnderstood is not null)
                 foreach (var lang in traitPrototype.LanguagesUnderstood)
-                    language.AddLanguage(args.Mob, lang, false, true);
+                    language.AddLanguage(uid, lang, false, true);
             // Einstein Engines - Language end
 
 

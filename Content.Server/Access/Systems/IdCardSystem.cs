@@ -112,16 +112,6 @@ public sealed class IdCardSystem : SharedIdCardSystem
 
         base.ExpireId(ent);
 
-        }
-    }
-
-    public override void ExpireId(Entity<ExpireIdCardComponent> ent)
-    {
-        if (ent.Comp.Expired)
-            return;
-
-        base.ExpireId(ent);
-
         if (ent.Comp.ExpireMessage != null)
         {
             _chat.TrySendInGameICMessage(

@@ -6,7 +6,6 @@ using Content.Server.Speech.Components;
 using Content.Server.Telephone;
 using Content.Shared.Access.Systems;
 using Content.Shared.Audio;
-using Content.Shared.Chat; // Einstein Engines - Language
 using Content.Shared.Chat.TypingIndicator;
 using Content.Shared.Holopad;
 using Content.Shared.IdentityManagement;
@@ -319,7 +318,7 @@ public sealed class HolopadSystem : SharedHolopadSystem
                 if (receiverHolopad.Comp.Hologram == null)
                     continue;
 
-                _appearanceSystem.SetData(receiverHolopad.Comp.Hologram.Value.Owner, TypingIndicatorVisuals.State, ev.State);
+                _appearanceSystem.SetData(receiverHolopad.Comp.Hologram.Value.Owner, TypingIndicatorVisuals.IsTyping, ev.IsTyping);
             }
         }
     }
@@ -506,25 +505,23 @@ public sealed class HolopadSystem : SharedHolopadSystem
 
         _updateTimer += frameTime;
 
-        // <Goobstation> - update timer fix ported from EE at e1d701bee25e124ee0e7a9390b46300fc044761f (https://github.com/Simple-Station/Einstein-Engines/pull/2470)
-        if (_updateTimer < UpdateTime)
-            return;
-
-        _updateTimer = 0f;
-
-        var query = AllEntityQuery<HolopadComponent, TelephoneComponent, TransformComponent>();
-        while (query.MoveNext(out var uid, out var holopad, out var telephone, out var xform))
+        if (_updateTimer >= UpdateTime)
         {
-            UpdateUIState((uid, holopad), telephone);
+            _updateTimer -= UpdateTime;
 
-            if (holopad.User != null &&
-                !HasComp<IgnoreUIRangeComponent>(holopad.User) &&
-                !_xformSystem.InRange((holopad.User.Value, Transform(holopad.User.Value)), (uid, xform), telephone.ListeningRange))
+            var query = AllEntityQuery<HolopadComponent, TelephoneComponent, TransformComponent>();
+            while (query.MoveNext(out var uid, out var holopad, out var telephone, out var xform))
             {
-                UnlinkHolopadFromUser((uid, holopad), holopad.User.Value);
+                UpdateUIState((uid, holopad), telephone);
+
+                if (holopad.User != null &&
+                    !HasComp<IgnoreUIRangeComponent>(holopad.User) &&
+                    !_xformSystem.InRange((holopad.User.Value, Transform(holopad.User.Value)), (uid, xform), telephone.ListeningRange))
+                {
+                    UnlinkHolopadFromUser((uid, holopad), holopad.User.Value);
+                }
             }
         }
-        // </Goobstation>
     }
 
     public void UpdateUIState(Entity<HolopadComponent> entity, TelephoneComponent? telephone = null)
@@ -645,7 +642,7 @@ public sealed class HolopadSystem : SharedHolopadSystem
                 continue;
 
             if (user == null)
-                _appearanceSystem.SetData(linkedHolopad.Comp.Hologram.Value.Owner, TypingIndicatorVisuals.State, false);
+                _appearanceSystem.SetData(linkedHolopad.Comp.Hologram.Value.Owner, TypingIndicatorVisuals.IsTyping, false);
 
             linkedHolopad.Comp.Hologram.Value.Comp.LinkedEntity = user;
             Dirty(linkedHolopad.Comp.Hologram.Value);
