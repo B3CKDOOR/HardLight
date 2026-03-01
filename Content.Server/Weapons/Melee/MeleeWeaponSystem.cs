@@ -12,7 +12,6 @@ using Robust.Shared.Player;
 using System.Linq;
 using System.Numerics;
 using Content.Shared._Goobstation.MartialArts.Events;
-using Content.Shared.Chat; // Einstein Engines - Languages
 
 namespace Content.Server.Weapons.Melee;
 
@@ -72,20 +71,20 @@ public sealed class MeleeWeaponSystem : SharedMeleeWeaponSystem
         return true;
     }
 
-    protected override bool DoDisarm(EntityUid user,
-        DisarmAttackEvent ev,
-        EntityUid meleeUid,
-        MeleeWeaponComponent component,
-        ICommonSession? session) // Goobstation - Shove Rework
+    protected override bool InRange(EntityUid user, EntityUid target, float range, ICommonSession? session)
     {
-        if (!base.DoDisarm(user, ev, meleeUid, component, session))
-            return false;
+        EntityCoordinates targetCoordinates;
+        Angle targetLocalAngle;
 
-        var target = GetEntity(ev.Target!.Value);
+        if (session is { } pSession)
+        {
+            (targetCoordinates, targetLocalAngle) = _lag.GetCoordinatesAngle(target, pSession);
+            return Interaction.InRangeUnobstructed(user, target, targetCoordinates, targetLocalAngle, range, overlapCheck: false);
+        }
 
-        EntityUid? inTargetHand = null;
+        return Interaction.InRangeUnobstructed(user, target, range);
+    }
 
-        if (!TryComp<CombatModeComponent>(user, out var combatMode))
     protected override void DoDamageEffect(List<EntityUid> targets, EntityUid? user, TransformComponent targetXform)
     {
         // Filter out any deleted entities that may have been destroyed by the damage
@@ -93,7 +92,7 @@ public sealed class MeleeWeaponSystem : SharedMeleeWeaponSystem
 
         if (validTargets.Count == 0)
             return;
-        Interaction.DoContactInteraction(user, target);
+
         // Use coordinates from the targetXform if valid, otherwise fall back to user coordinates
         var coordinates = targetXform.Coordinates;
         if (!coordinates.IsValid(EntityManager))
@@ -109,327 +108,6 @@ public sealed class MeleeWeaponSystem : SharedMeleeWeaponSystem
     }
 
     public override void DoLunge(EntityUid user, EntityUid weapon, Angle angle, Vector2 localPos, string? animation, bool predicted = true)
-        _audio.PlayPvs(combatMode.DisarmSuccessSound,
-            user,
-            AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction,
-            $"{ToPrettyString(user):user} used a shove on {ToPrettyString(target):target}");
-
-        return true;
-
-        // Goob - Shove Rework edit (moved to function)
-        void ShoveOrDisarmPopup(bool disarm)
-        {
-            var filterOther = Filter.PvsExcept(user, entityManager: EntityManager);
-            var msgPrefix = "disarm-action-";
-
-            if (!disarm)
-                msgPrefix = "disarm-action-shove-";
-
-            var msgOther = Loc.GetString(
-                msgPrefix + "popup-message-other-clients",
-                ("performerName", Identity.Entity(user, EntityManager)),
-                ("targetName", Identity.Entity(target, EntityManager)));
-
-            var msgUser = Loc.GetString(msgPrefix + "popup-message-cursor", ("targetName", Identity.Entity(target, EntityManager)));
-
-            PopupSystem.PopupEntity(msgOther, user, filterOther, true);
-            PopupSystem.PopupEntity(msgUser, target, user);
-        }
-    }
-
-    protected override bool InRange(EntityUid user, EntityUid target, float range, ICommonSession? session)
-    {
-        EntityUid meleeUid,
-        MeleeWeaponComponent component,
-        ICommonSession? session) // Goobstation - Shove Rework
-    {
-        if (!base.DoDisarm(user, ev, meleeUid, component, session))
-            return false;
-
-        var target = GetEntity(ev.Target!.Value);
-
-        EntityUid? inTargetHand = null;
-
-        if (!TryComp<CombatModeComponent>(user, out var combatMode))
-            return false;
-
-        PhysicalShove(user, target);
-        Interaction.DoContactInteraction(user, target);
-
-        if (_mobState.IsIncapacitated(target))
-            return true;
-
-        if (!TryComp<PhysicsComponent>(target, out var targetPhysicsComponent))
-            return false;
-
-        if (!TryComp<HandsComponent>(target, out var targetHandsComponent))
-        {
-            if (!TryComp<StatusEffectsComponent>(target, out var status) ||
-                !status.AllowedEffects.Contains("KnockedDown"))
-            {
-                return true;
-            }
-        }
-
-        if (targetHandsComponent?.ActiveHand is { IsEmpty: false })
-        {
-            inTargetHand = targetHandsComponent.ActiveHand.HeldEntity!.Value;
-        }
-
-        Interaction.DoContactInteraction(user, target);
-
-        var comboEv = new ComboAttackPerformedEvent(user, target, meleeUid, ComboAttackType.Disarm);
-        RaiseLocalEvent(user, comboEv);
-
-        var attemptEvent = new DisarmAttemptEvent(target, user, inTargetHand);
-        if (inTargetHand != null)
-        {
-            RaiseLocalEvent(inTargetHand.Value, attemptEvent);
-        }
-
-        RaiseLocalEvent(target, attemptEvent);
-
-        if (attemptEvent.Cancelled)
-            return true;
-
-        var chance = CalculateDisarmChance(user, target, inTargetHand, combatMode);
-
-        _audio.PlayPvs(combatMode.DisarmSuccessSound,
-            user,
-            AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction,
-            $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
-
-        var staminaDamage = CalculateShoveStaminaDamage(user, target);
-
-        var eventArgs = new DisarmedEvent
-        {
-            Target = target, Source = user, DisarmProbability = chance, StaminaDamage = staminaDamage,
-        };
-        RaiseLocalEvent(target, eventArgs);
-
-        if (!eventArgs.Handled)
-        {
-            ShoveOrDisarmPopup(false);
-            return true;
-        }
-
-        ShoveOrDisarmPopup(true);
-        _audio.PlayPvs(combatMode.DisarmSuccessSound,
-            user,
-            AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction,
-            $"{ToPrettyString(user):user} used a shove on {ToPrettyString(target):target}");
-
-        return true;
-
-        // Goob - Shove Rework edit (moved to function)
-        void ShoveOrDisarmPopup(bool disarm)
-        {
-            var filterOther = Filter.PvsExcept(user, entityManager: EntityManager);
-            var msgPrefix = "disarm-action-";
-
-            if (!disarm)
-                msgPrefix = "disarm-action-shove-";
-
-            var msgOther = Loc.GetString(
-                msgPrefix + "popup-message-other-clients",
-                ("performerName", Identity.Entity(user, EntityManager)),
-                ("targetName", Identity.Entity(target, EntityManager)));
-
-            var msgUser = Loc.GetString(msgPrefix + "popup-message-cursor", ("targetName", Identity.Entity(target, EntityManager)));
-
-            PopupSystem.PopupEntity(msgOther, user, filterOther, true);
-            PopupSystem.PopupEntity(msgUser, target, user);
-        }
-    }
-
-    protected override bool InRange(EntityUid user, EntityUid target, float range, ICommonSession? session)
-    {
-        EntityUid meleeUid,
-        MeleeWeaponComponent component,
-        ICommonSession? session) // Goobstation - Shove Rework
-    {
-        if (!base.DoDisarm(user, ev, meleeUid, component, session))
-            return false;
-
-        var target = GetEntity(ev.Target!.Value);
-
-        EntityUid? inTargetHand = null;
-
-        if (!TryComp<CombatModeComponent>(user, out var combatMode))
-            return false;
-
-        PhysicalShove(user, target);
-        Interaction.DoContactInteraction(user, target);
-
-        if (_mobState.IsIncapacitated(target))
-            return true;
-
-        if (!TryComp<PhysicsComponent>(target, out var targetPhysicsComponent))
-            return false;
-
-        if (!TryComp<HandsComponent>(target, out var targetHandsComponent))
-        {
-            if (!TryComp<StatusEffectsComponent>(target, out var status) ||
-                !status.AllowedEffects.Contains("KnockedDown"))
-            {
-                return true;
-            }
-        }
-
-        if (targetHandsComponent?.ActiveHand is { IsEmpty: false })
-        {
-            inTargetHand = targetHandsComponent.ActiveHand.HeldEntity!.Value;
-        }
-
-        Interaction.DoContactInteraction(user, target);
-
-        var comboEv = new ComboAttackPerformedEvent(user, target, meleeUid, ComboAttackType.Disarm);
-        RaiseLocalEvent(user, comboEv);
-
-        var attemptEvent = new DisarmAttemptEvent(target, user, inTargetHand);
-        if (inTargetHand != null)
-        {
-            RaiseLocalEvent(inTargetHand.Value, attemptEvent);
-        }
-
-        RaiseLocalEvent(target, attemptEvent);
-
-        if (attemptEvent.Cancelled)
-            return true;
-
-        var chance = CalculateDisarmChance(user, target, inTargetHand, combatMode);
-
-        _audio.PlayPvs(combatMode.DisarmSuccessSound,
-            user,
-            AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction,
-            $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
-
-        var staminaDamage = CalculateShoveStaminaDamage(user, target);
-
-        var eventArgs = new DisarmedEvent
-        {
-            Target = target, Source = user, DisarmProbability = chance, StaminaDamage = staminaDamage,
-        };
-        RaiseLocalEvent(target, eventArgs);
-
-        if (!eventArgs.Handled)
-        {
-            ShoveOrDisarmPopup(false);
-            return true;
-        }
-
-        ShoveOrDisarmPopup(true);
-        _audio.PlayPvs(combatMode.DisarmSuccessSound,
-            user,
-            AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
-        AdminLogger.Add(LogType.DisarmedAction,
-            $"{ToPrettyString(user):user} used a shove on {ToPrettyString(target):target}");
-
-        return true;
-
-        // Goob - Shove Rework edit (moved to function)
-        void ShoveOrDisarmPopup(bool disarm)
-        {
-            var filterOther = Filter.PvsExcept(user, entityManager: EntityManager);
-            var msgPrefix = "disarm-action-";
-
-            if (!disarm)
-                msgPrefix = "disarm-action-shove-";
-
-            var msgOther = Loc.GetString(
-                msgPrefix + "popup-message-other-clients",
-                ("performerName", Identity.Entity(user, EntityManager)),
-                ("targetName", Identity.Entity(target, EntityManager)));
-
-            var msgUser = Loc.GetString(msgPrefix + "popup-message-cursor", ("targetName", Identity.Entity(target, EntityManager)));
-
-            PopupSystem.PopupEntity(msgOther, user, filterOther, true);
-            PopupSystem.PopupEntity(msgUser, target, user);
-        }
-    }
-
-    protected override bool InRange(EntityUid user, EntityUid target, float range, ICommonSession? session)
-    {
-        EntityCoordinates targetCoordinates;
-        Angle targetLocalAngle;
-
-        if (session is { } pSession)
-        {
-            (targetCoordinates, targetLocalAngle) = _lag.GetCoordinatesAngle(target, pSession);
-            return Interaction.InRangeUnobstructed(user, target, targetCoordinates, targetLocalAngle, range, overlapCheck: false);
-        }
-
-        return Interaction.InRangeUnobstructed(user, target, range);
-    }
-
-    private void PhysicalShove(EntityUid user, EntityUid target)
-    {
-        var force = _shoveRange * _contests.MassContest(user, target, rangeFactor: _shoveMass);
-
-        var userPos = _transform.ToMapCoordinates(user.ToCoordinates()).Position;
-        var targetPos = _transform.ToMapCoordinates(target.ToCoordinates()).Position;
-        var pushVector = (targetPos - userPos).Normalized() * force;
-
-        var animated = false;
-        var throwInAir = false;
-
-        if (HasComp<ItemComponent>(target)) // Throw items instead of shoving
-        {
-            animated = true;
-            throwInAir = true;
-        }
-
-        _throwing.TryThrow(target, pushVector, force * _shoveSpeed, animated: animated, throwInAir: throwInAir);
-    }
-
-    protected override void DoDamageEffect(List<EntityUid> targets, EntityUid? user, TransformComponent targetXform)
-    {
-        var filter = Filter.Pvs(targetXform.Coordinates, entityMan: EntityManager).RemoveWhereAttachedEntity(o => o == user);
-        _color.RaiseEffect(Color.Red, targets, filter);
-    }
-
-    private float CalculateDisarmChance(EntityUid disarmer, EntityUid disarmed, EntityUid? inTargetHand, CombatModeComponent disarmerComp)
-    {
-        if (HasComp<DisarmProneComponent>(disarmer))
-            return 1.0f;
-
-        if (HasComp<DisarmProneComponent>(disarmed))
-            return 0.0f;
-
-        var chance = 1 - disarmerComp.BaseDisarmFailChance;
-
-        // Goob - Shove Rework disarm based on health & stamina
-        chance *= Math.Clamp(
-            _contests.StaminaContest(disarmer, disarmed)
-            * _contests.HealthContest(disarmer, disarmed),
-            0f,
-            1f);
-
-        if (inTargetHand != null && TryComp<DisarmMalusComponent>(inTargetHand, out var malus))
-            chance *= 1 - malus.Malus; // Goob - Shove Rework edit
-
-        if (TryComp<ShovingComponent>(disarmer, out var shoving))
-            chance *= 1 + shoving.DisarmBonus; // Goob - Shove Rework edit
-
-        return chance;
-
-    }
-
-    // Goob - Shove Rework shove stamina damage based on mass
-    private float CalculateShoveStaminaDamage(EntityUid disarmer, EntityUid disarmed)
-    {
-        var baseStaminaDamage = TryComp<ShovingComponent>(disarmer, out var shoving) ? shoving.StaminaDamage : ShovingComponent.DefaultStaminaDamage;
-
-        return
-            baseStaminaDamage
-            * _contests.MassContest(disarmer, disarmed, false, 4f);
-    }
-
-    public override void DoLunge(EntityUid user, EntityUid weapon, Angle angle, Vector2 localPos, string? animation, Angle spriteRotation, bool flipAnimation, bool predicted = true)
     {
         Filter filter;
 
