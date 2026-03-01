@@ -336,30 +336,3 @@ public enum ChatTransmitRange : byte
     /// Ghosts hear in range, and skip admin spam checks (server use)
     GhostRangeLimitNoAdminCheck,
 }
-
-/// <summary>
-///     InGame OOC chat is for chat that is specifically ingame (not lobby) but is OOC, like deadchat or LOOC.
-/// </summary>
-[Serializable, NetSerializable]
-public enum InGameOOCChatType : byte
-{
-    Looc,
-    Dead
-}
-
-/// <summary>
-///     Controls transmission of chat.
-/// </summary>
-[Serializable, NetSerializable]
-public enum ChatTransmitRange : byte
-{
-    /// Acts normal, ghosts can hear across the map, etc.
-    Normal,
-    /// Normal but ghosts are still range-limited.
-    GhostRangeLimit,
-    /// Hidden from the chat window.
-    HideChat,
-    /// Ghosts can't hear or see it at all. Regular players can if in-range.
-    NoGhosts
-}
-// Einstein Engines - Language end
