@@ -241,6 +241,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         else
         {
             message = SanitizeInGameICMessage(source, message, out emoteStr, shouldCapitalize, shouldPunctuate, shouldCapitalizeTheWordI);
+        }
 
         // Was there an emote in the message? If so, send it.
         if (player != null && emoteStr != message && emoteStr != null)
