@@ -63,30 +63,11 @@
       120: Dead
     stateAlertDict:
       Alive: BorgHealth
+      Dead: BorgDead
     showOverlays: false
-  - type: Stamina
-    critThreshold: 120
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 100
-      behaviors:
-      - !type:TriggerBehavior
-    - trigger:
-        !type:DamageTrigger
-        damage: 120
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: Body
-    prototype: Bot
-  - type: GuideHelp
-    guides:
-    - Robotics
   - type: Speech
     speechVerb: Robotic
-    speechSounds: Pai #couldn't decide if this should be borg or pai sounds so I flipped a coin.
+    speechSounds: Borg
   - type: TypingIndicator
     proto: robot
   - type: Vocal
@@ -97,8 +78,13 @@
   - type: ProtectedFromStepTriggers
   - type: NoSlip
   - type: Insulated
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
+  - type: LanguageKnowledge # Einstein Engines - Languages # Goob moved to MobRobotic since it is parent for MobSiliconBase
+    speaks:
+    - TauCetiBasic
+    - RobotTalk
+    understands:
+    - TauCetiBasic
+    - RobotTalk
 
 - type: entity
   parent: MobSiliconBase

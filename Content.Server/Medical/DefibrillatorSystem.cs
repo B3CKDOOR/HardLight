@@ -8,6 +8,7 @@ using Content.Server.Popups;
 using Content.Server.PowerCell;
 using Content.Shared.Chat; // For InGameICChatType
 using Content.Shared.Cloning.Events;
+using Content.Shared.Traits.Assorted;
 using Content.Shared.Damage;
 using Content.Shared.DoAfter;
 using Content.Shared.Interaction;

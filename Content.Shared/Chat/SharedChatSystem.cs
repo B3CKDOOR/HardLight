@@ -4,6 +4,7 @@ using Content.Shared.Popups;
 using Content.Shared.Radio;
 using Content.Shared.Speech;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization; // Einstein Engines - Language
 using Robust.Shared.Utility;
 using Robust.Shared.Serialization;
 
@@ -292,6 +293,7 @@ public abstract class SharedChatSystem : EntitySystem
     }
 }
 
+// Einstein Engines - Language begin (moves chat types to shared)
 /// <summary>
 ///     InGame IC chat is for chat that is specifically ingame (not lobby) but is also in character, i.e. speaking.
 /// </summary>

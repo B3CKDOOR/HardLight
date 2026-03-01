@@ -309,7 +309,7 @@
     - PartsStatic
     - AtmosStatic
     - CablesStatic
-    - CargoStatic
+    #- CargoStatic Goob edit - Moved to Cargo fab
     - MaterialsStatic
     - BasicChemistryStatic
     - RollerBedsStatic
@@ -1051,6 +1051,7 @@
       tags:
       - Raw
       - Wooden
+      - Boll
   - type: Lathe
     idleState: base_machine
     runningState: base_machine_processing

@@ -49,6 +49,10 @@
     allowedVerbs: [] # TODO: define something here, or don't.
   - type: AnimatedEmotes # goob edit - animated emotes
   - type: Emoting #HL
+  - type: AnimatedEmotes
+  - type: LanguageSpeaker # Einstein Engines - Language. This component is required to support speech, but it does not define known languages.
+  - type: Fart
+
 
 - type: entity
   save: false

@@ -1,6 +1,7 @@
 using Content.Server.Chat.Systems;
 using Content.Server.GameTicking;
 using Content.Server.GameTicking.Rules.Components;
+using Content.Shared.Chat; // Einstein Engines - Languages
 using Content.Shared.Magic;
 using Content.Shared.Magic.Events;
 using Content.Shared.Chat; // For InGameICChatType
@@ -22,13 +23,6 @@ public sealed class MagicSystem : SharedMagicSystem
     public override void Initialize()
     {
         base.Initialize();
-
-        SubscribeLocalEvent<SpeakSpellEvent>(OnSpellSpoken);
-    }
-
-    private void OnSpellSpoken(ref SpeakSpellEvent args)
-    {
-        _chat.TrySendInGameICMessage(args.Performer, Loc.GetString(args.Speech), InGameICChatType.Speak, false);
     }
 
     public override void OnVoidApplause(VoidApplauseSpellEvent ev)

@@ -7,6 +7,7 @@ using Content.Server.Popups;
 using Content.Shared.Access;
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
+using Content.Shared.Chat; // Einstein Engines - Language
 using Content.Shared.Database;
 using Content.Shared.Popups;
 using Robust.Shared.Prototypes;
@@ -20,6 +21,7 @@ public sealed class IdCardSystem : SharedIdCardSystem
     [Dependency] private readonly PopupSystem _popupSystem = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private readonly IAdminLogManager _adminLogger = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly MicrowaveSystem _microwave = default!;
 
@@ -115,7 +117,7 @@ public sealed class IdCardSystem : SharedIdCardSystem
             _chat.TrySendInGameICMessage(
                 ent,
                 Loc.GetString(ent.Comp.ExpireMessage),
-                InGameICChatType.Speak,
+                Shared.Chat.InGameICChatType.Speak,
                 ChatTransmitRange.Normal,
                 true);
         }

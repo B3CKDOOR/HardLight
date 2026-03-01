@@ -34,7 +34,7 @@
 
 - type: entity
   id: MobGoliath
-  parent: BaseMobAsteroid
+  parent: [ BaseMobAsteroid, MobBloodstream ]
   name: goliath
   description: A massive beast that uses long tentacles to ensnare its prey, threatening them is not advised under any conditions.
   components:
@@ -290,6 +290,8 @@
         15
       AggroVisionRadius: !type:Single
         15
+      NavSmash: !type:Bool
+        true
   - type: TimedDespawn
     lifetime: 100
 
@@ -320,6 +322,9 @@
     stage: 1
   - type: StaticPrice
     price: 5000
+  - type: Tag
+    tags:
+    - HivelordRemains
 
 - type: entity
   id: FoodHivelordRemainsInert

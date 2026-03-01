@@ -40,7 +40,7 @@ namespace Content.Server.Chat.Commands
                 return;
 
             IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<ChatSystem>()
-                .TrySendInGameICMessage(playerEntity, message, InGameICChatType.Subtle, ChatTransmitRange.NoGhosts, false, shell, player, color: SubtleColor);
+                .TrySendInGameICMessage(playerEntity, message, InGameICChatType.Subtle, ChatTransmitRange.NoGhosts, false, shell, player);
         }
     }
 }
