@@ -2888,13 +2888,6 @@
     interactSuccessString: petting-success-possum # Possums don't really make much noise when they're happy. They make clicking noises as a mating call, but that is NOT the same thing!
     interactFailureString: petting-failure-possum
     interactFailureSound:
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
-  - type: LanguageKnowledge # Einstein Engines - Language
-    speaks:
-    - Hissing
-    understands:
-    - Hissing
       path: /Audio/Animals/cat_hiss.ogg # This sound effect is intended for generic hissing. For easy reference it's named after the animal it came from IRL.
   - type: Grammar
     attributes:
@@ -2902,6 +2895,13 @@
   - type: Tag
     tags:
     - VimPilot
+  - type: LeashAnchor # Floofstation
+    kind: Intrinsic
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+      - Hissing
+    understands:
+      - Hissing
 
 - type: entity
   name: possum
@@ -2970,13 +2970,6 @@
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
-  - type: LeashAnchor # Floofstation
-    kind: Intrinsic
-  - type: LanguageKnowledge # Einstein Engines - Language
-    speaks:
-    - Hissing
-    understands:
-    - Hissing
       path: /Audio/Animals/raccoon_chatter.ogg
   - type: Grammar
     attributes:
@@ -2984,6 +2977,13 @@
   - type: Tag
     tags:
     - VimPilot
+  - type: LeashAnchor # Floofstation
+    kind: Intrinsic
+  - type: LanguageKnowledge # Einstein Engines - Language
+    speaks:
+    - Hissing
+    understands:
+    - Hissing
 
 - type: entity
   name: fox
@@ -3292,6 +3292,14 @@
       types:
         Piercing: 5
   - type: Grammar
+    attributes:
+      gender: epicene
+  - type: MobPrice
+    price: 200
+  - type: Tag
+    tags:
+    - VimPilot
+  - type: VentCrawler # goobstation - Ventcrawl
   - type: MovementSpeedModifier
     baseWalkSpeed: 2
     baseSprintSpeed: 4
@@ -3305,13 +3313,7 @@
   - type: LeashAnchor # Floofstation
     kind: Intrinsic
   # End DeltaV
-      gender: epicene
-  - type: MobPrice
-    price: 200
-  - type: Tag
-    tags:
-    - VimPilot
-  - type: VentCrawler # goobstation - Ventcrawl
+      
 
 - type: entity
   name: calico cat
@@ -3529,6 +3531,13 @@
     interactFailureString: petting-failure-sloth
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
+      path: /Audio/Animals/sloth_squeak.ogg
+  - type: Grammar
+    attributes:
+      gender: epicene
+  - type: Tag
+    tags:
+    - VimPilot
   - type: Genetics # Funkystation - Genetics
     baseMutations:
     - id: Narcolepsy
@@ -3538,13 +3547,6 @@
     - Hissing
     understands:
     - Hissing
-      path: /Audio/Animals/sloth_squeak.ogg
-  - type: Grammar
-    attributes:
-      gender: epicene
-  - type: Tag
-    tags:
-    - VimPilot
 
 - type: entity
   name: ferret
@@ -3593,6 +3595,13 @@
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
     interactSuccessSound:
+      path: /Audio/Animals/ferret_happy.ogg
+  - type: Grammar
+    attributes:
+      gender: epicene
+  - type: Tag
+    tags:
+    - VimPilot
   - type: LeashAnchor # Floofstation
     kind: Intrinsic
   - type: Genetics # Funkystation - Genetics
@@ -3604,13 +3613,6 @@
     - Hissing
     understands:
     - Hissing
-      path: /Audio/Animals/ferret_happy.ogg
-  - type: Grammar
-    attributes:
-      gender: epicene
-  - type: Tag
-    tags:
-    - VimPilot
 
 - type: entity
   name: hamster

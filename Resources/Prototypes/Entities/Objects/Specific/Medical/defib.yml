@@ -42,7 +42,6 @@
       - MedicalDoctor
     - type: PirateBountyItem # Frontier
       id: Defibrillator # Frontier
-      - Medical Doctor
     - type: LanguageSpeaker # Einstein Engines - Language
     - type: LanguageKnowledge # Einstein Engines - Language
       speaks:

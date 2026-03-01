@@ -263,7 +263,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         {
             if (TryProccessRadioMessage(source, message, out var modMessage, out var channel))
             {
-                SendEntityWhisper(source, modMessage, range, channel, nameOverride, language, hideLog, ignoreActionBlocker, wrappedMessagePostfix); // Goob edit & Einstein Engines - Language
+                SendEntityWhisper(source, modMessage, range, channel, nameOverride, language, hideLog, ignoreActionBlocker); // Einstein Engines - Language
                 return;
             }
         }
@@ -272,19 +272,16 @@ public sealed partial class ChatSystem : SharedChatSystem
         switch (desiredType)
         {
             case InGameICChatType.Speak:
-                SendEntitySpeak(source, message, range, nameOverride, language, hideLog, ignoreActionBlocker, wrappedMessagePostfix); // Goob edit & Einstein Engines - Language
+                SendEntitySpeak(source, message, range, nameOverride, language, hideLog, ignoreActionBlocker); // Einstein Engines - Language
                 break;
             case InGameICChatType.Whisper:
-                SendEntityWhisper(source, message, range, null, nameOverride, language, hideLog, ignoreActionBlocker, wrappedMessagePostfix); // Goob edit & Einstein Engines - Language
+                SendEntityWhisper(source, message, range, null, nameOverride, language, hideLog, ignoreActionBlocker); // Einstein Engines - Language
                 break;
             case InGameICChatType.Emote:
                 SendEntityEmote(source, message, range, nameOverride, language, hideLog: hideLog, ignoreActionBlocker: ignoreActionBlocker); // Einstein Engines - Language
                 break;
             case InGameICChatType.Subtle:
                 SendEntitySubtle(source, message, range, nameOverride, hideLog: hideLog, ignoreActionBlocker: ignoreActionBlocker);
-                break;
-            case InGameICChatType.Telepathic:
-                _telepath.SendTelepathicChat(source, message, range == ChatTransmitRange.HideChat);
                 break;
         }
     }
@@ -1146,6 +1143,23 @@ public sealed class EntitySpokeEvent : EntityEventArgs
         Language = language;
     }
 }
+
+// Frontier: emote event
+/// <summary>
+///     Raised on an entity when it sends a custom emote (one with a message but no sound).
+/// </summary>
+public sealed class NFEntityEmotedEvent : EntityEventArgs
+{
+    public readonly EntityUid Source;
+    public readonly string Emote;
+
+    public NFEntityEmotedEvent(EntityUid source, string emote)
+    {
+        Source = source;
+        Emote = emote;
+    }
+}
+// End Frontier
 
 /// <summary>
 ///     InGame IC chat is for chat that is specifically ingame (not lobby) but is also in character, i.e. speaking.
